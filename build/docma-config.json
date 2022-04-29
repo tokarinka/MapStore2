@@ -290,6 +290,7 @@
                 "web/client/plugins/ScrollTop.jsx",
                 "web/client/plugins/Search.jsx",
                 "web/client/plugins/SearchByBookmark.jsx",
+                "web/client/plugins/SearchPromptConfig.jsx",
                 "web/client/plugins/SearchServicesConfig.jsx",
                 "web/client/plugins/Settings.jsx",
                 "web/client/plugins/Share.jsx",

@@ -5,7 +5,7 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-import { SET_SEARCH_CONFIG_PROP, RESET_SEARCH_CONFIG, UPDATE_SERVICE } from '../actions/searchconfig';
+import { SET_SEARCH_CONFIG_PROMPT, RESET_SEARCH_CONFIG_PROMPT, UPDATE_SEARCH_PROMPT, SET_SEARCH_CONFIG_PROP, RESET_SEARCH_CONFIG, UPDATE_SERVICE } from '../actions/searchconfig';
 
 import { RESET_CONTROLS } from '../actions/controls';
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -35,6 +35,15 @@ function searchconfig(state = null, action) {
             newServices.push(newService);
         }
         return assign({}, state, {service: undefined, page: 0, init_service_values: undefined, editIdx: undefined, textSearchConfig: {services: newServices, override: state.textSearchConfig && state.textSearchConfig.override || false}});
+    }
+    case SET_SEARCH_CONFIG_PROMPT:{
+
+    }
+    case RESET_SEARCH_CONFIG_PROMPT:{
+
+    }
+    case UPDATE_SEARCH_PROMPT:{
+
     }
     default:
         return state;
