@@ -20,25 +20,17 @@ export const UPDATE_SERVICE = 'UPDATE_SERVICE';
 * @param {string|number|boolean|object} value the value to set or to check for toggling
 * @return {object} of type `SET_SEARCH_CONFIG_PROP` with property and value params
 */
-export function setSearchConfigPrompt(value) {
-    return {
-        type: SET_SEARCH_CONFIG_PROMPT,
-        value
-    };
-}
-
 export function restServiceConfigPrompt(page = 0 ) {
     return {
-        type: RESET_SEARCH_CONFIG,
+        type: RESET_SEARCH_CONFIG_PROMPT,
         page
     };
 }
 
-export function updateSearchPrompt(service, idx = -1) {
+export function updateSearchPrompt(prompt) {
     return {
         type: UPDATE_SEARCH_PROMPT,
-        service,
-        idx
+        prompt
     };
 }
 

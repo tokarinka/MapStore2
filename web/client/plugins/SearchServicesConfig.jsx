@@ -61,6 +61,7 @@ class SearchServicesConfigPanel extends React.Component {
         })),
         page: PropTypes.number,
         service: PropTypes.object,
+        prompt: PropTypes.string,
         initServiceValues: PropTypes.object,
         onPropertyChange: PropTypes.func,
         newService: PropTypes.object.isRequired,
@@ -122,7 +123,7 @@ class SearchServicesConfigPanel extends React.Component {
             return (
                 <span role="footer">
                     <Button onClick={this.addService} bsStyle="primary">
-                        <Message msgId="search.addbtn" />
+                        <Message msgId="search.addbtnservice" />
                     </Button>
                 </span>);
         } else if (page === pages.length - 1) {
@@ -154,7 +155,7 @@ class SearchServicesConfigPanel extends React.Component {
     };
 
     render() {
-        const { enabled, pages, page, id, panelStyle, panelClassName, titleText, closeGlyph, onPropertyChange, service, textSearchConfig = {}, containerClassName} = this.props;
+        const { enabled, pages, page, id, panelStyle, panelClassName, titleText, closeGlyph, onPropertyChange, service, prompt, textSearchConfig = {}, containerClassName} = this.props;
         const Section = pages && pages[page] || null;
         return enabled ? (
             <Portal>
@@ -171,6 +172,7 @@ class SearchServicesConfigPanel extends React.Component {
                             services={textSearchConfig.services}
                             override={textSearchConfig.override}
                             onPropertyChange={onPropertyChange}
+                            prompt={prompt}
                             service={service}/>
                     </div>
                     {this.renderFooter()}

@@ -102,7 +102,6 @@ export default {
         ScrollTopPlugin: require('../plugins/ScrollTop').default,
         SearchPlugin: require('../plugins/Search').default,
         SearchServicesConfigPlugin: require('../plugins/SearchServicesConfig').default,
-        SearchPromptConfigPlugin: require('../plugins/SearchPromptConfig').default,
         SearchByBookmarkPlugin: require('../plugins/SearchByBookmark').default,
         SettingsPlugin: require('../plugins/Settings').default,
         SharePlugin: require('../plugins/Share'),

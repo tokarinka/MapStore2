@@ -8,7 +8,7 @@
 
 import React from 'react';
 
-import { FormGroup, Checkbox, ControlLabel, Glyphicon } from 'react-bootstrap';
+import { FormGroup, Checkbox, ControlLabel, Glyphicon, Button, FormControl, InputGroup} from 'react-bootstrap';
 import Message from '../../I18N/Message';
 import ConfirmButton from '../../buttons/ConfirmButton';
 import PropTypes from 'prop-types';
@@ -22,6 +22,7 @@ class ServicesList extends React.Component {
         services: PropTypes.array,
         override: PropTypes.bool,
         service: PropTypes.object,
+        prompt: PropTypes.string,
         onPropertyChange: PropTypes.func
     };
 
@@ -30,6 +31,7 @@ class ServicesList extends React.Component {
     };
 
     static defaultProps = {
+        prompt: "Search by location name",
         services: [],
         override: false,
         onPropertyChange: () => {}
@@ -53,23 +55,49 @@ class ServicesList extends React.Component {
         });
     };
 
+    getPrompts = () => {
+        return (<div className=""> 
+                <InputGroup className="search-prompt-input">
+                    <FormControl maxLength="50" type="text" value={this.props.prompt} onChange={event => this.editPrompt(event.target.value)} />
+                    <Button variant="outline-secondary" onClick={this.updatePrompt}>Update</Button>
+                </InputGroup>
+            </div>);
+    };
+
     render() {
         const {override} = this.props;
         return (
-            <form>
-                <FormGroup>
-                    <ControlLabel>
-                        <Message msgId="search.serviceslistlabel" />
-                    </ControlLabel>
-                    <div className="services-list">
-                        {this.getOptions()}
-                    </div>
-                </FormGroup>
-                <Checkbox checked={override} onChange={this.toggleOverride}>
-                    <Message msgId="search.overriedservice" />
-                </Checkbox>
-            </form>);
+            <div>
+                <form>
+                    <FormGroup>
+                        <ControlLabel>
+                            <Message msgId="search.serviceslistlabel" />
+                        </ControlLabel>
+                        <div className="services-list">
+                            {this.getOptions()}
+                        </div>
+                    </FormGroup>
+                    <Checkbox checked={override} onChange={this.toggleOverride}>
+                        <Message msgId="search.overriedservice" />
+                    </Checkbox>
+                </form>
+                <form>
+                    <FormGroup>
+                        <ControlLabel>
+                            <Message msgId="search.promptslistlabel" />
+                        </ControlLabel>
+                        {this.getPrompts()}
+                    </FormGroup>
+                    
+                    <Checkbox checked={override} onChange={this.toggleOverridePrompt}>
+                        <Message msgId="search.overriedprompt" />
+                    </Checkbox>
+                </form>
+            </div>
+            );
     }
+
+    // Search Service section
 
     edit = (s, idx) => {
         this.props.onPropertyChange("init_service_values", s);
@@ -82,11 +110,35 @@ class ServicesList extends React.Component {
         const {services, override} = this.props;
         this.props.onPropertyChange("textSearchConfig", {services, override: !override});
     };
-
+    
     remove = (idx) => {
         const {services, override} = this.props;
         const newServices = services.filter((el, i) => i !== idx);
         this.props.onPropertyChange("textSearchConfig", {services: newServices, override});
+    };
+    
+    // Search Prompt section
+
+    getCurrentPrompt = () => {
+        if (this.props.prompt !== "Search by location name") {
+            return this.props.prompt;
+        }
+        return "Search by location name";
+    };
+
+    editPrompt = (newPrompt) => {
+        console.log(newPrompt);
+        this.props.prompt = newPrompt;
+    }
+
+    updatePrompt = () => {
+        console.log(this.props.prompt);
+        // document.querySelector(".searchInput").setAttribute('placeholder', this.props.prompt);
+    };
+
+    toggleOverridePrompt = () => {
+        const {prompt, override} = this.props;
+        this.props.onPropertyChange("textSearchConfig", {prompt, override: !override});
     };
 }
 
