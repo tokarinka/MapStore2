@@ -23,7 +23,8 @@ class ServicesList extends React.Component {
         override: PropTypes.bool,
         service: PropTypes.object,
         prompt: PropTypes.string,
-        onPropertyChange: PropTypes.func
+        onPropertyChange: PropTypes.func,
+        updateSearchPrompt: PropTypes.func
     };
 
     static contextTypes = {
@@ -31,11 +32,15 @@ class ServicesList extends React.Component {
     };
 
     static defaultProps = {
-        prompt: "Search by location name",
         services: [],
         override: false,
-        onPropertyChange: () => {}
+        onPropertyChange: () => {},
+        updateSearchPrompt: () => {}
     };
+
+    state = {
+        newPrompt: ""
+    }
 
     getOptions = () => {
         if (this.props.services.length === 0) {
@@ -58,8 +63,19 @@ class ServicesList extends React.Component {
     getPrompts = () => {
         return (<div className=""> 
                 <InputGroup className="search-prompt-input">
-                    <FormControl maxLength="50" type="text" value={this.props.prompt} onChange={event => this.editPrompt(event.target.value)} />
-                    <Button variant="outline-secondary" onClick={this.updatePrompt}>Update</Button>
+                    {/* <FormControl maxLength="50" type="text" value={this.props.prompt} onChange={event => this.editPrompt(event.target.value)} /> */}
+                    <FormControl
+                        maxLength="50"
+                        type="text"
+                        value={this.state.newPrompt}
+                        onChange={event => this.setState({newPrompt: event.target.value})}
+                        // onChange={event => this.props.prompt = event.target.value}
+                    />
+                    <Button 
+                        variant="outline-secondary" 
+                        onClick={this.updatePrompt}>
+                            Update
+                    </Button>
                 </InputGroup>
             </div>);
     };
@@ -110,13 +126,13 @@ class ServicesList extends React.Component {
         const {services, override} = this.props;
         this.props.onPropertyChange("textSearchConfig", {services, override: !override});
     };
-    
+
     remove = (idx) => {
         const {services, override} = this.props;
         const newServices = services.filter((el, i) => i !== idx);
         this.props.onPropertyChange("textSearchConfig", {services: newServices, override});
     };
-    
+
     // Search Prompt section
 
     getCurrentPrompt = () => {
@@ -126,14 +142,15 @@ class ServicesList extends React.Component {
         return "Search by location name";
     };
 
-    editPrompt = (newPrompt) => {
-        console.log(newPrompt);
-        this.props.prompt = newPrompt;
-    }
+    // editPrompt = (newPrompt) => {
+    //     console.log(newPrompt);
+    //     this.props.prompt = newPrompt;
+    // }
 
     updatePrompt = () => {
-        console.log(this.props.prompt);
-        // document.querySelector(".searchInput").setAttribute('placeholder', this.props.prompt);
+        // this.props.onPromptUpdate("textSearchConfig", {prompt: this.state.newPrompt});
+        console.log("SERVICELIST -> ", this.state.newPrompt)
+        this.props.updateSearchPrompt(this.state.newPrompt);
     };
 
     toggleOverridePrompt = () => {
