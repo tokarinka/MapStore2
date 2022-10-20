@@ -5,17 +5,13 @@
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
-import { RESET_SEARCH_CONFIG_PROMPT, UPDATE_SEARCH_PROMPT, SET_SEARCH_CONFIG_PROP, RESET_SEARCH_CONFIG, UPDATE_SERVICE } from '../actions/searchconfig';
+import { SET_SEARCH_CONFIG_PROP, RESET_SEARCH_CONFIG, UPDATE_SERVICE } from '../actions/searchconfig';
 
 import { RESET_CONTROLS } from '../actions/controls';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import assign from 'object-assign';
 
 function searchconfig(state = null, action) {
-    if (state && state.textSearchConfig) {
-        console.log(state);
-        console.log(state.textSearchConfig);
-    }
     switch (action.type) {
     case SET_SEARCH_CONFIG_PROP:
         return assign({}, state, {
@@ -40,14 +36,6 @@ function searchconfig(state = null, action) {
         }
         return assign({}, state, {service: undefined, page: 0, init_service_values: undefined, editIdx: undefined, textSearchConfig: {services: newServices, override: state.textSearchConfig && state.textSearchConfig.override || false}});
     }
-    case RESET_SEARCH_CONFIG_PROMPT: {
-        return assign({}, state, {prompt: "Search by location name"});
-    }
-    case UPDATE_SEARCH_PROMPT: {
-        let newPrompt = state.textSearchConfig && state.textSearchConfig.prompt || "Search by location name";
-        return assign({}, state, {textSearchConfig: {prompt: newPrompt}});
-    }
-
     default:
         return state;
     }

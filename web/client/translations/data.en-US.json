@@ -739,7 +739,7 @@
             "searchservicesbutton": "Configure search services",
             "configpaneltitle": "Create/edit a search options",
             "serviceslistlabel": "Available services",
-            "promptslistlabel": "Available prompt",
+            "promptslistlabel": "Current search prompt",
             "overriedservice": "Override default services",
             "overriedprompt": "Override default prompt",
             "addbtn": "Add",

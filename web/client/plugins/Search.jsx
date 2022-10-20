@@ -50,6 +50,7 @@ import { mapSelector } from '../selectors/map';
 import ConfigUtils from '../utils/ConfigUtils';
 import { defaultIconStyle } from '../utils/SearchUtils';
 import ToggleButton from './searchbar/ToggleButton';
+import {getMessageById} from '../utils/LocaleUtils';
 
 const searchSelector = createSelector([
     state => state.search || null,
@@ -293,7 +294,8 @@ const SearchPlugin = connect((state) => ({
     enabled: state.controls && state.controls.search && state.controls.search.enabled || false,
     selectedServices: state && state.search && state.search.selectedServices,
     selectedItems: state && state.search && state.search.selectedItems,
-    textSearchConfig: state && state.searchconfig && state.searchconfig.textSearchConfig
+    textSearchConfig: state && state.searchconfig && state.searchconfig.textSearchConfig,
+    currentPrompt: state && state.searchconfig && state.searchconfig.textSearchConfig && state.searchconfig.textSearchConfig.prompt
 }), {
     onUpdateResultsStyle: updateResultsStyle
 })(
@@ -310,7 +312,12 @@ const SearchPlugin = connect((state) => ({
         userServices: PropTypes.array,
         withToggle: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
         enabled: PropTypes.bool,
-        textSearchConfig: PropTypes.object
+        textSearchConfig: PropTypes.object,
+        currentPrompt: PropTypes.string
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
     };
 
     static defaultProps = {
@@ -341,8 +348,11 @@ const SearchPlugin = connect((state) => ({
 
     getSearchOptions = () => {
         const { searchOptions, textSearchConfig } = this.props;
+        if (!searchOptions.prompt) {
+            searchOptions.prompt = getMessageById(this.context.messages, "search.addressSearch");
+        }
         if (textSearchConfig && textSearchConfig.services && textSearchConfig.services.length > 0) {
-            return textSearchConfig.override ? assign({}, searchOptions, {services: textSearchConfig.services}) : assign({}, searchOptions, {services: searchOptions.services.concat(textSearchConfig.services)});
+            return textSearchConfig.override ? assign({}, searchOptions, {services: textSearchConfig.services, prompt: textSearchConfig.prompt}) : assign({}, searchOptions, {services: searchOptions.services.concat(textSearchConfig.services), prompt: textSearchConfig.prompt});
         }
         return searchOptions;
     };
@@ -353,12 +363,30 @@ const SearchPlugin = connect((state) => ({
         return selectedServices && selectedServices.length > 0 ? assign({}, searchOptions, {services: selectedServices}) : searchOptions;
     };
 
+    getCurrentPrompt = () => {
+        const {textSearchConfig, currentPrompt} = this.props;
+        const searchOptions = this.getSearchOptions();
+
+        console.log(textSearchConfig, currentPrompt, searchOptions.prompt)
+
+        if (textSearchConfig && textSearchConfig.prompt && textSearchConfig.prompt !== "") {
+            console.log(searchOptions.prompt, currentPrompt, textSearchConfig.prompt, "1")
+            return currentPrompt == searchOptions.prompt ? assign("", searchOptions, {prompt: currentPrompt}) : textSearchConfig.prompt;
+        }
+        return currentPrompt && currentPrompt !== "" ? assign("", searchOptions, {prompt: currentPrompt}) : searchOptions.prompt;
+    }
+
     getSearchAndToggleButton = () => {
+        console.log(this.getCurrentPrompt(), this.getServiceOverrides("placeholder"), "1.5")
+        const placeholder = this.getCurrentPrompt() || this.getServiceOverrides("placeholder");
+
+        console.log(placeholder, "2")
+
         const search = (<SearchBar
             key="searchBar"
             {...this.props}
             searchOptions={this.getCurrentServices()}
-            placeholder={this.getServiceOverrides("placeholder")}
+            placeholder={placeholder}
             placeholderMsgId={this.getServiceOverrides("placeholderMsgId")}
         />);
         if (this.props.withToggle === true) {

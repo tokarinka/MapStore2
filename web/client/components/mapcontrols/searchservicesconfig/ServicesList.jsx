@@ -13,6 +13,8 @@ import Message from '../../I18N/Message';
 import ConfirmButton from '../../buttons/ConfirmButton';
 import PropTypes from 'prop-types';
 
+import {getMessageById} from '../../../utils/LocaleUtils';
+
 function validate() {
     return true;
 }
@@ -23,8 +25,7 @@ class ServicesList extends React.Component {
         override: PropTypes.bool,
         service: PropTypes.object,
         prompt: PropTypes.string,
-        onPropertyChange: PropTypes.func,
-        updateSearchPrompt: PropTypes.func
+        onPropertyChange: PropTypes.func
     };
 
     static contextTypes = {
@@ -39,7 +40,7 @@ class ServicesList extends React.Component {
     };
 
     state = {
-        newPrompt: ""
+        newPrompt: this.props.prompt
     }
 
     getOptions = () => {
@@ -61,6 +62,9 @@ class ServicesList extends React.Component {
     };
 
     getPrompts = () => {
+        if (!this.state.newPrompt) {
+            this.state.newPrompt = getMessageById(this.context.messages, "search.addressSearch");
+        }
         return (<div className=""> 
                 <InputGroup className="search-prompt-input">
                     {/* <FormControl maxLength="50" type="text" value={this.props.prompt} onChange={event => this.editPrompt(event.target.value)} /> */}
@@ -105,7 +109,7 @@ class ServicesList extends React.Component {
                         {this.getPrompts()}
                     </FormGroup>
                     
-                    <Checkbox checked={override} onChange={this.toggleOverridePrompt}>
+                    <Checkbox onChange={this.toggleOverridePrompt}>
                         <Message msgId="search.overriedprompt" />
                     </Checkbox>
                 </form>
@@ -135,27 +139,16 @@ class ServicesList extends React.Component {
 
     // Search Prompt section
 
-    getCurrentPrompt = () => {
-        if (this.props.prompt !== "Search by location name") {
-            return this.props.prompt;
-        }
-        return "Search by location name";
-    };
-
-    // editPrompt = (newPrompt) => {
-    //     console.log(newPrompt);
-    //     this.props.prompt = newPrompt;
-    // }
-
     updatePrompt = () => {
-        // this.props.onPromptUpdate("textSearchConfig", {prompt: this.state.newPrompt});
-        console.log("SERVICELIST -> ", this.state.newPrompt)
-        this.props.updateSearchPrompt(this.state.newPrompt);
+        const {override, services} = this.props;
+        this.props.onPropertyChange("textSearchConfig", {prompt: this.state.newPrompt, services, override});
     };
 
     toggleOverridePrompt = () => {
-        const {prompt, override} = this.props;
-        this.props.onPropertyChange("textSearchConfig", {prompt, override: !override});
+        // const {prompt, override, services} = this.props;
+        // this.props.onPropertyChange("textSearchConfig", {prompt, override: !override, services});
+        const {override, services} = this.props;
+        this.props.onPropertyChange("textSearchConfig", {prompt: getMessageById(this.context.messages, "search.addressSearch"), services, override});
     };
 }
 

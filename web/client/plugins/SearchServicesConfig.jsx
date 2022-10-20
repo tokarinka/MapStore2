@@ -18,7 +18,7 @@ import Message from './locale/Message';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
 import { toggleControl } from '../actions/controls';
-import { setSearchConfigProp, updateService, restServiceConfig, restSearchConfigPrompt, updateSearchPrompt } from '../actions/searchconfig';
+import { setSearchConfigProp, updateService, restServiceConfig, restSearchConfigPrompt } from '../actions/searchconfig';
 import ServiceList from '../components/mapcontrols/searchservicesconfig/ServicesList.jsx';
 import WFSServiceProps from '../components/mapcontrols/searchservicesconfig/WFSServiceProps.jsx';
 import ResultsProps from '../components/mapcontrols/searchservicesconfig/ResultsProps.jsx';
@@ -61,14 +61,11 @@ class SearchServicesConfigPanel extends React.Component {
         })),
         page: PropTypes.number,
         service: PropTypes.object,
-        prompt: PropTypes.string,
         initServiceValues: PropTypes.object,
         onPropertyChange: PropTypes.func,
         newService: PropTypes.object.isRequired,
         updateService: PropTypes.func,
-        updateSearchPrompt: PropTypes.func,
         restServiceConfig: PropTypes.func,
-        restSearchConfigPrompt: PropTypes.func,
         textSearchConfig: PropTypes.object,
         editIdx: PropTypes.number
     };
@@ -93,7 +90,6 @@ class SearchServicesConfigPanel extends React.Component {
         closePanel: () => {},
         onPropertyChange: () => {},
         page: 0,
-        prompt: "Search by location name",
         newService: {
             type: "wfs",
             name: "",
@@ -158,7 +154,7 @@ class SearchServicesConfigPanel extends React.Component {
     };
 
     render() {
-        const { enabled, pages, page, id, panelStyle, panelClassName, titleText, closeGlyph, onPropertyChange, service, prompt, textSearchConfig = {}, containerClassName} = this.props;
+        const { enabled, pages, page, id, panelStyle, panelClassName, titleText, closeGlyph, onPropertyChange, service, textSearchConfig = {}, containerClassName} = this.props;
         const Section = pages && pages[page] || null;
         return enabled ? (
             <Portal>
@@ -215,11 +211,6 @@ class SearchServicesConfigPanel extends React.Component {
         const {service, editIdx} = this.props;
         this.props.updateService(service, editIdx);
     };
-
-    // updatePrompt = (prompt) => {
-    //     // const {prompt} = this.props;
-    //     this.props.updateSearchPrompt(prompt);
-    // };
 }
 
 const SearchServicesPlugin = connect(({controls = {}, searchconfig = {}}) => ({
@@ -227,17 +218,15 @@ const SearchServicesPlugin = connect(({controls = {}, searchconfig = {}}) => ({
     pages: [ServiceList, WFSServiceProps, ResultsProps, WFSOptionalProps],
     page: searchconfig && searchconfig.page || 0,
     service: searchconfig && searchconfig.service,
-    prompt: searchconfig && searchconfig.prompt,
     initServiceValues: searchconfig && searchconfig.init_service_values,
     textSearchConfig: searchconfig && searchconfig.textSearchConfig,
+    prompt: searchconfig && searchconfig.textSearchConfig && searchconfig.textSearchConfig.prompt,
     editIdx: searchconfig && searchconfig.editIdx
 }), {
     toggleControl,
     onPropertyChange: setSearchConfigProp,
-    updateSearchPrompt,
     restServiceConfig,
-    updateService,
-    restSearchConfigPrompt})(SearchServicesConfigPanel);
+    updateService})(SearchServicesConfigPanel);
 
 function SearchServiceButton({
     activeTool,
