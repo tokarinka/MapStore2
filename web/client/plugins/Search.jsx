@@ -366,21 +366,19 @@ const SearchPlugin = connect((state) => ({
     getCurrentPrompt = () => {
         const {textSearchConfig, currentPrompt} = this.props;
         const searchOptions = this.getSearchOptions();
-
-        console.log(textSearchConfig, currentPrompt, searchOptions.prompt)
+        let placeholder = null;
 
         if (textSearchConfig && textSearchConfig.prompt && textSearchConfig.prompt !== "") {
-            console.log(searchOptions.prompt, currentPrompt, textSearchConfig.prompt, "1")
-            return currentPrompt == searchOptions.prompt ? assign("", searchOptions, {prompt: currentPrompt}) : textSearchConfig.prompt;
+            placeholder = currentPrompt === textSearchConfig.prompt && searchOptions.prompt !== currentPrompt ? assign({}, searchOptions, {prompt: currentPrompt}) : textSearchConfig;
+        } else {
+            placeholder = currentPrompt && currentPrompt !== "" ? assign({}, searchOptions, {prompt: currentPrompt}) : searchOptions;
         }
-        return currentPrompt && currentPrompt !== "" ? assign("", searchOptions, {prompt: currentPrompt}) : searchOptions.prompt;
+
+        return placeholder.prompt;
     }
 
     getSearchAndToggleButton = () => {
-        console.log(this.getCurrentPrompt(), this.getServiceOverrides("placeholder"), "1.5")
         const placeholder = this.getCurrentPrompt() || this.getServiceOverrides("placeholder");
-
-        console.log(placeholder, "2")
 
         const search = (<SearchBar
             key="searchBar"

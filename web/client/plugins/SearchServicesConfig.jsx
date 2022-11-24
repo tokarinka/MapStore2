@@ -18,7 +18,7 @@ import Message from './locale/Message';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
 import { toggleControl } from '../actions/controls';
-import { setSearchConfigProp, updateService, restServiceConfig, restSearchConfigPrompt } from '../actions/searchconfig';
+import { setSearchConfigProp, updateService, restServiceConfig } from '../actions/searchconfig';
 import ServiceList from '../components/mapcontrols/searchservicesconfig/ServicesList.jsx';
 import WFSServiceProps from '../components/mapcontrols/searchservicesconfig/WFSServiceProps.jsx';
 import ResultsProps from '../components/mapcontrols/searchservicesconfig/ResultsProps.jsx';
